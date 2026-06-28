@@ -31,8 +31,8 @@ Same game, same settings, same device — **only the kernel differs**.
 
 </td>
 <td width="50%" align="center">
-<
-**Default Armbian config**
+
+Default Armbian config
 
 <video src="https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970" width="100%" controls muted></video>
 

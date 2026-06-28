@@ -1,0 +1,36 @@
+# SM8550 firmware manifest — ROCKNIX trimmed set + AYN overlays
+# Prefixes: ? = optional (no error if missing), @system = prefer /lib/firmware over tarball
+#
+# Generic blobs: linux-firmware tarball (config/firmware.conf)
+# Vendor blobs: build host (/lib/firmware or /usr/lib/firmware)
+
+# --- ROCKNIX kernel-firmware.dat (linux-firmware tarball) ---
+# USB_RTL8152
+rtl_nic/rtl8153a-4.fw
+
+qca/hmtbtfw20.tlv
+qca/hmtnv20.*
+qcom/sm8550/a740_zap.mbn
+qcom/a740_sqe.fw
+qcom/gmu_gen70200.bin
+
+# --- WiFi: Armbian system, ROCKNIX 4-file set (no ncm865/ extras) ---
+@system ath12k/WCN7850/hw2.0/amss.bin
+@system ath12k/WCN7850/hw2.0/board-2.bin
+@system ath12k/WCN7850/hw2.0/m3.bin
+@system ath12k/WCN7850/hw2.0/regdb.bin
+
+# --- Vendor / overlay blobs (system first) ---
+@system qcom/vpu/vpu30_p4.mbn
+@system qcom/sm8550/AYN-Odin2-tplg.bin
+@system renesas_usb_fw.mem
+
+# ROCKNIX-only or Armbian alternates (optional — post-install may add symlinks)
+?@system qcom/sm8550/AYN-Thor-tplg.bin
+?@system qcom/sm8550/SM8550-APS-tplg.bin
+?@system qcom/sm8550/SM8550-HDK-tplg.bin
+?@system qcom/sm8550/SM8550-QRD-tplg.bin
+?@system qcom/sm8550/QCS8550-AYN-ODIN2-tplg.bin
+
+# --- AYN vendor firmware (always from system) ---
+@system qcom/sm8550/ayn/*

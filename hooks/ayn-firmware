@@ -1,0 +1,46 @@
+#!/bin/bash
+[[ "$1" == "prereqs" ]] && exit 0
+. /usr/share/initramfs-tools/hook-functions
+
+# Prefer firmware staged by lib/initramfs.sh (build output tree).
+FW_ROOT="/lib/firmware"
+if [[ -f /etc/ayn-firmware-staging ]]; then
+    read -r staged < /etc/ayn-firmware-staging
+    if [[ -n "${staged}" && -d "${staged}" ]]; then
+        FW_ROOT="${staged}"
+    fi
+fi
+
+_add_tree() {
+    local rel
+    for f in $(find "${FW_ROOT}/${1}" -type f 2>/dev/null); do
+        rel="${f#${FW_ROOT}/}"
+        mkdir -p "${DESTDIR}/lib/firmware/$(dirname "${rel}")"
+        cp -L "${f}" "${DESTDIR}/lib/firmware/${rel}"
+    done
+}
+
+_add_file() {
+    local rel="$1"
+    [[ -f "${FW_ROOT}/${rel}" ]] || return 0
+    mkdir -p "${DESTDIR}/lib/firmware/$(dirname "${rel}")"
+    cp -L "${FW_ROOT}/${rel}" "${DESTDIR}/lib/firmware/${rel}"
+}
+
+if [[ "${FW_ROOT}" != "/lib/firmware" ]]; then
+    for f in $(find "${FW_ROOT}" -type f 2>/dev/null); do
+        rel="${f#${FW_ROOT}/}"
+        mkdir -p "${DESTDIR}/lib/firmware/$(dirname "${rel}")"
+        cp -L "${f}" "${DESTDIR}/lib/firmware/${rel}"
+    done
+    exit 0
+fi
+
+# Fallback: host /lib/firmware (legacy / FIRMWARE_POLICY=system)
+_add_tree "qcom/sm8550"
+_add_file "qcom/a740_sqe.fw"
+_add_file "qcom/gmu_gen70200.bin"
+_add_file "qcom/vpu/vpu30_p4.mbn"
+_add_tree "ath12k/WCN7850/hw2.0"
+_add_tree "qca"
+_add_tree "qcom/sm8550/ayn"

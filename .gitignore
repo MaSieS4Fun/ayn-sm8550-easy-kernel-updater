@@ -1,0 +1,14 @@
+# Build artifacts
+output/
+.cache/
+
+# Editor / OS
+*.swp
+*~
+.DS_Store
+.idea/
+.vscode/
+
+# Local overrides (optional)
+.env
+*.local

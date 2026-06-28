@@ -102,7 +102,7 @@ Disk: ~2 GB free for sources + build tree. RAM: compile uses all cores (`JOBS=np
 ## Quick start
 
 ```bash
-git clone https://github.com/YOUR_USER/ayn-sm8550-easy-kernel-updater.git
+git clone https://github.com/MaSieS4Fun/ayn-sm8550-easy-kernel-updater.git
 cd ayn-sm8550-easy-kernel-updater
 ./make_kernel.sh
 ./update.sh

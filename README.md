@@ -17,29 +17,20 @@ No manual patch hunting. No 3 GB firmware dump. Kernel series track **Armbian’
 
 Same game, same settings, same device — **only the kernel differs**.
 
+| Tuned kernel (this project) | Default Armbian kernel config |
+|---------------------------|-------------------------------|
+| **~50–60 FPS, smooth** | **~40 FPS, stutters** (~40–50% loss) |
+
 <table>
-<tr>
-<th>Tuned kernel (this project)</th>
-<th>Default Armbian kernel config</th>
-</tr>
 <tr>
 <td width="50%">
 
-**~50–60 FPS, smooth** 
-
 https://github.com/user-attachments/assets/038dc6ec-7344-43bb-843e-710672b9bca8
-
 
 </td>
 <td width="50%">
 
-**~40 FPS, stutters** (~40–50% loss)
-
-
-
 https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970
-
-
 
 </td>
 </tr>
@@ -61,10 +52,10 @@ The performance gap is **not** “Linux 6.18 good, Linux 7.0 bad.” It is **wro
 
 ### Root causes fixed by this project
 
-1. **Scheduler** — `SCHED_SMT`, cluster/MC awareness; **PSI disabled**  
-2. **CPU frequency** — default governor **performance**, not schedutil  
-3. **EAS capacities** — Armbian patch sets A510 to **326** (measured on Odin 2), not Qualcomm’s ~1024  
-4. **Storage** — `MMC_SDHCI_MSM_DOWNSTREAM` for proper UFS path  
+1. **Scheduler** — `SCHED_SMT`, cluster/MC awareness; **PSI disabled**
+2. **CPU frequency** — default governor **performance**, not schedutil
+3. **EAS capacities** — Armbian patch sets A510 to **326** (measured on Odin 2), not Qualcomm’s ~1024
+4. **Storage** — `MMC_SDHCI_MSM_DOWNSTREAM` for proper UFS path
 5. **Safe HDMI boot** — LT8912 as module + minimal initramfs (dock HDMI hang workaround)
 
 Full analysis: **[docs/PERFORMANCE.md](docs/PERFORMANCE.md)**
@@ -93,7 +84,7 @@ sudo apt install build-essential libssl-dev libncurses-dev libelf-dev \
   flex bison bc curl patch initramfs-tools whiptail python3 u-boot-tools
 ```
 
-Disk: ~2 GB free for sources + build tree. RAM: compile uses all cores (`JOBS=nproc`).
+Disk: ~2 GB free for sources + build tree. RAM: compile uses all cores.
 
 ---
 
@@ -106,24 +97,24 @@ cd ayn-sm8550-easy-kernel-updater
 ./update.sh
 ```
 
-Use a **system terminal** (Konsole, xfce4-terminal). For text-only menus: `UI=plain ./make_kernel.sh`.
+Use a **system terminal** (Konsole, xfce4-terminal).
 
 ### What `./make_kernel.sh` does
 
-1. Discovers supported kernel series from [Armbian](https://github.com/armbian/build) (`sm8550-*` patch sets)  
-2. Lists recent versions from [kernel.org](https://kernel.org)  
-3. Downloads source, applies Armbian patches, verifies EAS in DT  
-4. Applies **golden 6.18.8 config** + gaming kconfig overrides  
-5. Builds `Image`, modules, DTBs, ROCKNIX-trimmed firmware, initramfs  
+1. Discovers supported kernel series from [Armbian](https://github.com/armbian/build)
+2. Lists recent versions from [kernel.org](https://kernel.org)
+3. Downloads source, applies Armbian patches, verifies EAS in device tree
+4. Applies gaming-tuned config + overrides
+5. Builds `Image`, modules, DTBs, trimmed firmware, initramfs
 6. Writes `output/<version>-edge-sm8550/` with `MANIFEST.txt`
 
 Typical compile time on Odin 2: **20–40 minutes**.
 
 ### What `./update.sh` does
 
-1. Asks for **sudo** password  
-2. Backs up running system → `output/old_kernel/` (`boot/`, `firmware/`, `modules/`)  
-3. Installs from selected build (`/boot` is FAT — handled automatically)  
+1. Asks for **sudo** password
+2. Backs up running system → `output/old_kernel/` (`boot/`, `firmware/`, `modules/`)
+3. Installs from selected build
 4. Warns reboot is required; asks **Reboot now? [y/N]**
 
 Rollback:
@@ -142,7 +133,7 @@ sudo cp -a output/old_kernel/modules/. /usr/lib/modules/
 output/7.0.14-edge-sm8550/
 ├── boot/          Image, initrd, DTBs, LinuxLoader.cfg
 ├── modules/7.0.14-edge-sm8550/
-├── firmware/      ROCKNIX-trimmed set (~200 MB)
+├── firmware/      trimmed SM8550 set (~200 MB)
 ├── MANIFEST.txt
 └── INSTALL.txt
 ```
@@ -155,37 +146,20 @@ output/7.0.14-edge-sm8550/
 |-------|----------|
 | Kernel tarball | [cdn.kernel.org](https://cdn.kernel.org/pub/linux/kernel/) |
 | SM8550 patches | [github.com/armbian/build](https://github.com/armbian/build) |
-| Gaming config | Verified Odin 2 **6.18.8** → `config/golden.config` |
-| Firmware tarball | [linux-firmware](https://kernel.org/pub/linux/kernel/firmware/) (ROCKNIX-pinned version) |
+| Gaming config | Verified Odin 2 6.18.8 baseline |
+| Firmware tarball | [linux-firmware](https://kernel.org/pub/linux/kernel/firmware/) |
 | Firmware manifest | [ROCKNIX SM8550](https://github.com/ROCKNIX/distribution) + AYN blobs from your system |
-| EAS fix | Armbian patches 0102 / 0028 (Wuxilin / Odin 2 calibration) |
+| EAS fix | Armbian patches 0102 / 0028 |
 
-Details and licenses: **[docs/SOURCES.md](docs/SOURCES.md)**
-
----
-
-## Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `GAMING_TUNING` | `1` | Apply gaming kconfig overrides |
-| `INITRAMFS_PROFILE` | `minimal` | No early DRM (HDMI-at-boot safe) |
-| `FIRMWARE_POLICY` | `rocknix` | Trimmed firmware vs full system copy |
-| `PATCH_POLICY` | `strict` | Abort if any patch fails |
-| `UPDATE_BUILD` | — | `./update.sh` install specific output folder |
-| `SKIP_REBOOT` | — | Install without reboot prompt |
-| `UI` | auto | `plain` for SSH / non-TTY |
-
-Advanced patch bisect (debug only): `PERF_PROFILE=gaming-qos ./make_kernel.sh` — see `config/perf-profiles.conf`.
+Details: **[docs/SOURCES.md](docs/SOURCES.md)**
 
 ---
 
-## Diagnostics
+## Optional tools
 
 ```bash
-./scripts/diagnose-gaming-perf.sh              # system snapshot
-./scripts/diagnose-gaming-perf.sh $(pgrep -f 'game\.exe')  # under load
-./scripts/update-firmware.sh                   # refresh firmware cache only
+./scripts/diagnose-gaming-perf.sh
+./scripts/update-firmware.sh
 ```
 
 ---

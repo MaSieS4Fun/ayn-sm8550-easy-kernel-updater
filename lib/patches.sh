@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# shellcheck source=config/perf-profiles.conf
-[[ -n "${ROOT:-}" && -f "${ROOT}/config/perf-profiles.conf" ]] && source "${ROOT}/config/perf-profiles.conf"
-
 _patch_is_skipped() {
     local base="$1" deny_list="${2:-${PATCH_SKIP:-}}"
     local deny
@@ -21,28 +18,21 @@ _patch_is_skipped() {
 apply_armbian_patches() {
     local src_dir="$1" patch_set="$2" kernel_ver="$3"
     local patch_dir failed=0 applied=0 skipped=0 denied=0
-    local effective_skip
     patch_dir="$(fetch_armbian_patches "${patch_set}")"
     mkdir -p "${OUTPUT_DIR}"
     local log="${OUTPUT_DIR}/patch-log-${patch_set}.txt"
     : > "${log}"
 
-    effective_skip="$(resolve_effective_patch_skip 2>/dev/null || true)"
-    effective_skip="${effective_skip:-${PATCH_SKIP:-}}"
-
     echo "==> Applying patches ${patch_set} (linux-${kernel_ver})" >&2
-    if [[ -n "${PERF_PROFILE:-}" && "${PERF_PROFILE}" != "full" ]]; then
-        echo "  PERF_PROFILE=${PERF_PROFILE} — $(perf_profile_description "${PERF_PROFILE}")" >&2
-    fi
-    if [[ -n "${effective_skip}" ]]; then
-        echo "  PATCH_SKIP=${effective_skip}" >&2
+    if [[ -n "${PATCH_SKIP:-}" ]]; then
+        echo "  PATCH_SKIP=${PATCH_SKIP}" >&2
     fi
 
     shopt -s nullglob
     local patch base
     for patch in "${patch_dir}"/*.patch; do
         base="$(basename "${patch}")"
-        if _patch_is_skipped "${base}" "${effective_skip}"; then
+        if _patch_is_skipped "${base}" "${PATCH_SKIP:-}"; then
             echo "  DENY ${base}" >&2
             denied=$((denied + 1))
             continue

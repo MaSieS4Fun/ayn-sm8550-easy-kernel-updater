@@ -18,8 +18,6 @@ mkdir -p "${OUTPUT_DIR}" "${CACHE_DIR}"
 source "${ROOT}/config/defaults.conf"
 # shellcheck source=config/firmware.conf
 source "${ROOT}/config/firmware.conf"
-# shellcheck source=config/perf-profiles.conf
-source "${ROOT}/config/perf-profiles.conf"
 source "${ROOT}/lib/ui.sh"
 source "${ROOT}/lib/kernel-org.sh"
 source "${ROOT}/lib/download.sh"

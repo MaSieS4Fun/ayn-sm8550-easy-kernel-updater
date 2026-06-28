@@ -9,8 +9,8 @@ This project assembles a **gaming-tuned kernel stack** from public upstreams. We
 | Mainline kernel tarball | [kernel.org CDN](https://cdn.kernel.org/pub/linux/kernel/) | Version picked in `./make_kernel.sh` menu |
 | Armbian SM8550 patches | [armbian/build](https://github.com/armbian/build) `patch/kernel/archive/sm8550-*` | Drivers, DTBs, EAS fix, board support |
 | Armbian patch discovery | [armbian/build](https://github.com/armbian/build) `config/sources/families/sm8550.conf` | Which kernel series are supported |
-| Gaming `.config` baseline | `config/golden.config` | From verified **6.18.8-edge-sm8550** Odin 2 image |
-| Gaming kconfig overrides | `lib/kconfig.sh` | Applied on every build |
+| Gaming config baseline | Verified **6.18.8-edge-sm8550** Odin 2 image | Shipped with the project |
+| Gaming kconfig overrides | Applied automatically on every build | Scheduler, cpufreq, storage |
 
 ### Key Armbian patches (examples)
 
@@ -24,13 +24,11 @@ Patch set name tracks Armbian (e.g. `sm8550-7.0`). Builds **abort** if patches d
 
 | Component | Source | Notes |
 |-----------|--------|-------|
-| Generic Qualcomm / USB / BT blobs | [linux-firmware](https://kernel.org/pub/linux/kernel/firmware/) tarball | Pinned in `config/firmware.conf` (ROCKNIX uses same version) |
-| SM8550 file list | [ROCKNIX/distribution](https://github.com/ROCKNIX/distribution) `projects/ROCKNIX/devices/SM8550/config/kernel-firmware.dat` | Trimmed manifest — saves ~3 GB vs full tree |
+| Generic Qualcomm / USB / BT blobs | [linux-firmware](https://kernel.org/pub/linux/kernel/firmware/) tarball | Trimmed SM8550 manifest |
+| SM8550 file list | [ROCKNIX/distribution](https://github.com/ROCKNIX/distribution) SM8550 device config | Saves ~3 GB vs full tree |
 | WiFi (ath12k WCN7850) | **Your Armbian install** `/usr/lib/firmware` | 4-file ROCKNIX subset, Armbian blobs preferred |
 | AYN ADSP/CDSP/audio | **Your Armbian install** `qcom/sm8550/ayn/*` | Not in upstream linux-firmware |
-| Audio topology (tplg) | **Your Armbian install** + optional ROCKNIX symlinks | `AYN-Thor-tplg.bin` → `AYN-Odin2-tplg.bin` if missing |
-
-Manifest: `config/firmware-sm8550.dat`
+| Audio topology (tplg) | **Your Armbian install** | Optional ROCKNIX-compatible symlinks |
 
 ## Device tree & boot
 

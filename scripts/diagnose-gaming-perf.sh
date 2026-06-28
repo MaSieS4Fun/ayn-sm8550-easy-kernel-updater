@@ -75,11 +75,3 @@ if compgen -G "${dtsi}" > /dev/null; then
     echo "--- built tree EAS (last cached kernel source) ---"
     verify_eas_in_dtsi "$(ls -td ${ROOT}/.cache/linux-*/arch/arm64/boot/dts/qcom/sm8550.dtsi 2>/dev/null | head -1)" || true
 fi
-
-echo
-echo "Suspect Armbian patches if EAS OK but perf bad (bisect in order):"
-echo "  0102 / 0028  EAS capacities (Wuxilin)"
-echo "  0122         interconnect QoS (GPU/CPU bandwidth)"
-echo "  0154         OPP acd-level"
-echo "  0200-0204    AYN common.dtsi + multi-board refactor"
-echo "  0101         DDR/LLCC/L3 bandwidth scaling"

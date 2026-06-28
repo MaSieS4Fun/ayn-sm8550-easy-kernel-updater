@@ -1,5 +1,5 @@
 #!/bin/bash
-# Known-good 6.18.8 gaming baseline (config + optional import sources)
+# Known-good 6.18.8 gaming baseline (config/golden.config)
 set -euo pipefail
 
 GOLDEN_CONFIG="${ROOT}/config/golden.config"
@@ -9,8 +9,6 @@ ensure_golden_config() {
     [[ -f "${GOLDEN_CONFIG}" ]] && return 0
 
     for candidate in \
-        "${ROOT}/../kernel-6.18.8-rendimineto/boot/config-6.18.8-edge-sm8550" \
-        "/home/odin2/Projects/kernel-6.18.8-rendimineto/boot/config-6.18.8-edge-sm8550" \
         /boot/config-6.18.8-edge-sm8550 \
         /boot/config-6.18.8-* \
     ; do
@@ -20,9 +18,8 @@ ensure_golden_config() {
     done
 
     if [[ -z "${src}" ]]; then
-        echo "WARNING: config/golden.config missing and no 6.18.8 reference found." >&2
-        echo "  Gaming overrides still apply, but base .config may be suboptimal." >&2
-        echo "  Place a good config at: ${GOLDEN_CONFIG}" >&2
+        echo "WARNING: config/golden.config missing." >&2
+        echo "  Copy a known-good config: ./scripts/save-golden-config.sh /boot/config-*" >&2
         return 1
     fi
 

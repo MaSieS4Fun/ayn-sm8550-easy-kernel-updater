@@ -178,16 +178,12 @@ ui_confirm_build() {
         *) dev_label="${device}" ;;
     esac
 
-    local msg profile_line=""
-    if [[ -n "${PERF_PROFILE:-}" && "${PERF_PROFILE}" != "full" ]]; then
-        profile_line="Perf:       ${PERF_PROFILE} — $(perf_profile_description "${PERF_PROFILE}")
-"
-    fi
+    local msg
     msg="Kernel:     linux-${ver}
 Patches:    ${patch_set}
-Config:     gaming baseline (golden 6.18.8 + tuning)
+Config:     gaming baseline + tuning
 Initramfs:  ${INITRAMFS_PROFILE:-minimal} (HDMI-at-boot safe)
-${profile_line}Device:     ${dev_label}
+Device:     ${dev_label}
 Jobs:       ${JOBS}
 Output:     ${OUTPUT_DIR}/${ver}${KERNEL_LOCALVERSION}/
 

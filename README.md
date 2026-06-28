@@ -45,8 +45,6 @@ https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970
 </tr>
 </table>
 
-> **Before publishing:** upload both ~10 s clips to `docs/videos/` or drag them into this README on GitHub (Settings → edit README). Update the `YOUR_USER/YOUR_REPO` links above.
-
 **Why?** See [docs/PERFORMANCE.md](docs/PERFORMANCE.md) — summary below.
 
 ---

@@ -25,21 +25,21 @@ Same game, same settings, same device — **only the kernel differs**.
 <tr>
 <td width="50%">
 
-**~50–60 FPS, smooth** (example: RE2 Remake + Lossless Scaling 2×)
+**~50–60 FPS, smooth** 
 
-<!-- Replace with your file after upload: -->
-https://github.com/YOUR_USER/YOUR_REPO/assets/PLACEHOLDER/demo-tuned-kernel.mp4
+https://github.com/user-attachments/assets/038dc6ec-7344-43bb-843e-710672b9bca8
 
-Or local path: [`docs/videos/demo-tuned-kernel.mp4`](docs/videos/demo-tuned-kernel.mp4)
 
 </td>
 <td width="50%">
 
 **~40 FPS, stutters** (~40–50% loss)
 
-https://github.com/YOUR_USER/YOUR_REPO/assets/PLACEHOLDER/demo-armbian-default.mp4
 
-Or local path: [`docs/videos/demo-armbian-default.mp4`](docs/videos/demo-armbian-default.mp4)
+
+https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970
+
+
 
 </td>
 </tr>
@@ -189,13 +189,6 @@ Advanced patch bisect (debug only): `PERF_PROFILE=gaming-qos ./make_kernel.sh` �
 ./scripts/diagnose-gaming-perf.sh $(pgrep -f 'game\.exe')  # under load
 ./scripts/update-firmware.sh                   # refresh firmware cache only
 ```
-
----
-
-## Publishing this repo on GitHub
-
-**Non-developer step-by-step (Spanish):** [docs/GUIA_GITHUB_ES.md](docs/GUIA_GITHUB_ES.md)  
-**Detailed English guide:** [docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)
 
 ---
 

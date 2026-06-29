@@ -26,15 +26,12 @@ Same game, same settings, same device — **only the kernel differs**.
 <td width="50%" align="center">
 
 **Tuned kernel**
-=======
 <video src="https://github.com/user-attachments/assets/700702b9-6073-487a-8e7d-4af519503dec" width="100%" controls muted></video>
 
 </td>
 <td width="50%" align="center">
 
 **Default Armbian config**
-
-=======
 <video src="https://github.com/user-attachments/assets/053ca87f-cfc2-4c3a-8ab8-d50dc07d6c62" width="100%" controls muted></video>
 
 </td>

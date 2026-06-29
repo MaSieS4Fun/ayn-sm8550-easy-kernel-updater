@@ -18,6 +18,8 @@ mkdir -p "${OUTPUT_DIR}" "${CACHE_DIR}"
 source "${ROOT}/config/defaults.conf"
 # shellcheck source=config/firmware.conf
 source "${ROOT}/config/firmware.conf"
+# shellcheck source=lib/boot/detect.sh
+source "${ROOT}/lib/boot/detect.sh"
 source "${ROOT}/lib/ui.sh"
 source "${ROOT}/lib/kernel-org.sh"
 source "${ROOT}/lib/download.sh"
@@ -42,6 +44,11 @@ main() {
     check_running_on_device
     ensure_golden_config || true
     refresh_armbian_support
+
+    local boot_method
+    boot_method="$(detect_boot_profile /boot)"
+    echo "Boot method: $(boot_profile_label "${boot_method}") (auto-detected)" >&2
+    echo "" >&2
 
     local kernel_ver device_choice patch_set src_dir out_dir
 

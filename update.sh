@@ -17,6 +17,8 @@ export OUTPUT_DIR="${ROOT}/output"
 
 # shellcheck source=config/defaults.conf
 source "${ROOT}/config/defaults.conf"
+# shellcheck source=lib/boot/detect.sh
+source "${ROOT}/lib/boot/detect.sh"
 source "${ROOT}/lib/install.sh"
 
 install_system_paths
@@ -27,6 +29,7 @@ echo "  Backup -> output/old_kernel/  |  Install -> /boot, firmware, modules"
 echo "============================================================"
 echo ""
 echo "Running kernel: $(uname -r)"
+echo "Boot method:    $(boot_profile_label "$(detect_boot_profile "${INSTALL_BOOT_SRC}")") (auto-detected)"
 echo ""
 
 install_pick_build || exit 1

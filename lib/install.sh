@@ -6,6 +6,11 @@ INSTALL_BOOT_SRC="${INSTALL_BOOT_SRC:-/boot}"
 INSTALL_FIRMWARE_SRC="${INSTALL_FIRMWARE_SRC:-/usr/lib/firmware}"
 INSTALL_MODULES_SRC="${INSTALL_MODULES_SRC:-/usr/lib/modules}"
 
+if [[ -n "${ROOT:-}" && -f "${ROOT}/lib/boot/detect.sh" ]]; then
+    # shellcheck source=lib/boot/detect.sh
+    source "${ROOT}/lib/boot/detect.sh"
+fi
+
 _resolve_path() {
     readlink -f "$1" 2>/dev/null || echo "$1"
 }
@@ -149,24 +154,38 @@ EOF
 
 install_from_build() {
     local build="$1"
-    local release modules_src firmware_src
+    local release modules_src firmware_src profile
 
     release="$(basename "${build}")"
     modules_src="${build}/modules/${release}"
     firmware_src="${build}/firmware"
 
-    echo "==> Installing kernel from ${build}/" >&2
+    if declare -F boot_profile_from_build >/dev/null 2>&1; then
+        profile="$(boot_profile_from_build "${build}/boot")"
+        echo "==> Installing kernel from ${build}/ ($(boot_profile_label "${profile}"))" >&2
+    else
+        profile="unknown"
+        echo "==> Installing kernel from ${build}/" >&2
+    fi
 
     [[ -f "${build}/boot/Image" ]] || {
         echo "Missing ${build}/boot/Image" >&2
         return 1
     }
 
-    echo "  /boot/ <- boot/" >&2
+    echo "  ${INSTALL_BOOT_SRC}/ <- boot/" >&2
     if install_boot_is_vfat; then
         echo "  (boot is FAT — copying without Unix ownership)" >&2
     fi
     _install_cp_tree "${build}/boot" "${INSTALL_BOOT_SRC}"
+
+    rm -f "${INSTALL_BOOT_SRC}/.boot-profile"
+
+    if [[ "${profile}" == "efi" && -f "${INSTALL_BOOT_SRC}/LinuxLoader.cfg" ]]; then
+        rm -f "${INSTALL_BOOT_SRC}/LinuxLoader.cfg"
+        echo "  Removed stale LinuxLoader.cfg (EFI boot)" >&2
+    fi
+
     sync "${INSTALL_BOOT_SRC}" 2>/dev/null || sync
 
     if [[ -d "${firmware_src}" ]]; then
@@ -188,6 +207,7 @@ install_from_build() {
     cat >> "${OUTPUT_DIR}/old_kernel/BACKUP.txt" <<EOF
 installed_build=${build}
 installed_release=${release}
+installed_boot_profile=${profile}
 installed_date=$(date -Iseconds)
 EOF
 

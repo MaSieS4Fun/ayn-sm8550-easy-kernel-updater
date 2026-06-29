@@ -27,14 +27,22 @@ Same game, same settings, same device — **only the kernel differs**.
 
 **Tuned kernel**
 
+<<<<<<< Updated upstream
 <video src="https://github.com/user-attachments/assets/8b7752cf-f20b-40f4-ae47-ceb982125f49" width="100%" controls muted></video>
+=======
+<video src="https://github.com/user-attachments/assets/038dc6ec-7344-43bb-843e-710672b9bca8" width="100%" controls muted></video>
+>>>>>>> Stashed changes
 
 </td>
 <td width="50%" align="center">
 
 **Default Armbian config**
 
+<<<<<<< Updated upstream
 <video src="https://github.com/user-attachments/assets/a2adacc4-9295-4cd9-b0c7-48d38909ca1f" width="100%" controls muted></video>
+=======
+<video src="https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970" width="100%" controls muted></video>
+>>>>>>> Stashed changes
 
 </td>
 </tr>
@@ -81,7 +89,7 @@ Build **ALL** in the menu to produce every DTB in one run.
 
 ## Requirements
 
-Run on the **AYN device** (uses local firmware paths and `/boot/LinuxLoader.cfg`):
+Run on the **AYN device** (reads your `/boot/` layout — LinuxLoader or EFI/GRUB automatically):
 
 ```bash
 sudo apt install build-essential libssl-dev libncurses-dev libelf-dev \
@@ -110,7 +118,8 @@ Use a **system terminal** (Konsole, xfce4-terminal).
 3. Downloads source, applies Armbian patches, verifies EAS in device tree
 4. Applies gaming-tuned config + overrides
 5. Builds `Image`, modules, DTBs, trimmed firmware, initramfs
-6. Writes `output/<version>-edge-sm8550/` with `MANIFEST.txt`
+6. Assembles boot files for your device (**LinuxLoader** or **EFI/GRUB** — auto-detected)
+7. Writes `output/<version>-edge-sm8550/` with `MANIFEST.txt`
 
 Typical compile time on Odin 2: **20–40 minutes**.
 
@@ -135,12 +144,14 @@ sudo cp -a output/old_kernel/modules/. /usr/lib/modules/
 
 ```
 output/7.0.14-edge-sm8550/
-├── boot/          Image, initrd, DTBs, LinuxLoader.cfg
+├── boot/          Image, initrd, DTBs, LinuxLoader.cfg or EFI/BOOT/
 ├── modules/7.0.14-edge-sm8550/
 ├── firmware/      trimmed SM8550 set (~200 MB)
 ├── MANIFEST.txt
 └── INSTALL.txt
 ```
+
+Boot layout is chosen automatically from your running system — no extra settings.
 
 ---
 

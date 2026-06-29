@@ -67,11 +67,33 @@ write_manifest() {
     local release="${ver}${KERNEL_LOCALVERSION}"
     local manifest="${out_dir}/MANIFEST.txt"
     local install="${out_dir}/INSTALL.txt"
+    local profile boot_layout boot_note
+
+    profile="unknown"
+    if [[ -f "${out_dir}/boot/.boot-profile" ]]; then
+        profile="$(tr -d '[:space:]' < "${out_dir}/boot/.boot-profile")"
+    fi
+
+    case "${profile}" in
+        efi)
+            boot_layout="    Image, initrd, DTBs, EFI/BOOT/, boot/grub/"
+            boot_note="EFI/GRUB: devicetree is set in grub.cfg (auto-patched on build/install)."
+            ;;
+        linuxloader)
+            boot_layout="    Image, initrd, DTBs, LinuxLoader.cfg, uInitrd"
+            boot_note="LinuxLoader: edit devicetree= in LinuxLoader.cfg if your device differs."
+            ;;
+        *)
+            boot_layout="    Image, initrd, DTBs, boot config (LinuxLoader or EFI)"
+            boot_note="Boot files depend on auto-detected method on the device."
+            ;;
+    esac
 
     cat > "${manifest}" <<EOF
 # AYN SM8550 kernel build
 Date: $(date -Iseconds)
 Kernel: linux-${ver} (${release})
+Boot: ${profile}
 Source: kernel.org + Armbian patches (${device})
 Config: gaming baseline (config/golden.config + tuning)
 Initramfs: ${INITRAMFS_PROFILE:-minimal}
@@ -80,13 +102,7 @@ Firmware: ${FIRMWARE_POLICY_USED:-rocknix} ($(basename "${FIRMWARE_MANIFEST:-con
 
 Layout:
   boot/
-    Image
-    config-${release}
-    System.map-${release}
-    initrd.img-${release}
-    uInitrd
-    LinuxLoader.cfg
-    qcs8550-ayn-*.dtb
+${boot_layout}
   modules/${release}/
     kernel/ + modules.* metadata
   firmware/          (copy for images / backup)
@@ -113,7 +129,7 @@ Or copy files yourself:
 
 Previous system is saved to output/old_kernel/ when using ./update.sh.
 
-Edit /boot/LinuxLoader.cfg devicetree= line if your device differs from the build default.
+${boot_note}
 
 DTB by device:
   Odin 2 Base   -> qcs8550-ayn-odin2.dtb

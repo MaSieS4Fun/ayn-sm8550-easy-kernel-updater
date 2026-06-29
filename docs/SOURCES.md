@@ -35,7 +35,10 @@ Patch set name tracks Armbian (e.g. `sm8550-7.0`). Builds **abort** if patches d
 | Component | Source |
 |-----------|--------|
 | DTBs | Compiled locally from patched `sm8550.dtsi` + AYN board DTS |
-| `LinuxLoader.cfg` | Copied from device `/boot/`, initrd + DTB lines updated |
+| LinuxLoader | Copied from device `/boot/`, initrd + DTB lines updated (classic Armbian) |
+| EFI / GRUB | `EFI/BOOT/` + `boot/grub/grub.cfg` patched from device (ROCKNIX ABL style) |
+
+Detection is automatic — the same `./make_kernel.sh` and `./update.sh` work for both.
 
 ## References & credit
 

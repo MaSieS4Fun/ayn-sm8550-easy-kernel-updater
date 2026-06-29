@@ -178,12 +178,16 @@ ui_confirm_build() {
         *) dev_label="${device}" ;;
     esac
 
-    local msg
+    local msg boot_line=""
+    if declare -F detect_boot_profile >/dev/null 2>&1; then
+        boot_line="Boot:       $(boot_profile_label "$(detect_boot_profile /boot)") (auto)
+"
+    fi
     msg="Kernel:     linux-${ver}
 Patches:    ${patch_set}
 Config:     gaming baseline + tuning
 Initramfs:  ${INITRAMFS_PROFILE:-minimal} (HDMI-at-boot safe)
-Device:     ${dev_label}
+${boot_line}Device:     ${dev_label}
 Jobs:       ${JOBS}
 Output:     ${OUTPUT_DIR}/${ver}${KERNEL_LOCALVERSION}/
 
@@ -221,7 +225,7 @@ ui_build_complete() {
     echo ""
     echo "  Output: ${out}/"
     echo ""
-    echo "  boot/       Image, initrd, DTBs, LinuxLoader.cfg, uInitrd"
+    echo "  boot/       Image, initrd, DTBs, boot config (LinuxLoader or EFI/GRUB)"
     echo "  modules/    lib/modules/<version>/ (full tree)"
     echo "  firmware/   ROCKNIX-trimmed set (linux-firmware + AYN overlays)"
     echo ""

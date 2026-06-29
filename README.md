@@ -26,9 +26,6 @@ Same game, same settings, same device — **only the kernel differs**.
 <td width="50%" align="center">
 
 **Tuned kernel**
-
-<<<<<<< Updated upstream
-<video src="https://github.com/user-attachments/assets/8b7752cf-f20b-40f4-ae47-ceb982125f49" width="100%" controls muted></video>
 =======
 <video src="https://github.com/user-attachments/assets/038dc6ec-7344-43bb-843e-710672b9bca8" width="100%" controls muted></video>
 >>>>>>> Stashed changes
@@ -38,8 +35,6 @@ Same game, same settings, same device — **only the kernel differs**.
 
 **Default Armbian config**
 
-<<<<<<< Updated upstream
-<video src="https://github.com/user-attachments/assets/a2adacc4-9295-4cd9-b0c7-48d38909ca1f" width="100%" controls muted></video>
 =======
 <video src="https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970" width="100%" controls muted></video>
 >>>>>>> Stashed changes

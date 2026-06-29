@@ -27,7 +27,7 @@ Same game, same settings, same device — **only the kernel differs**.
 
 **Tuned kernel**
 =======
-<video src="https://github.com/user-attachments/assets/038dc6ec-7344-43bb-843e-710672b9bca8" width="100%" controls muted></video>
+<video src="https://github.com/user-attachments/assets/700702b9-6073-487a-8e7d-4af519503dec" width="100%" controls muted></video>
 
 </td>
 <td width="50%" align="center">
@@ -35,7 +35,7 @@ Same game, same settings, same device — **only the kernel differs**.
 **Default Armbian config**
 
 =======
-<video src="https://github.com/user-attachments/assets/58d805e4-da78-479a-a177-48c82b8a1970" width="100%" controls muted></video>
+<video src="https://github.com/user-attachments/assets/053ca87f-cfc2-4c3a-8ab8-d50dc07d6c62" width="100%" controls muted></video>
 
 </td>
 </tr>
